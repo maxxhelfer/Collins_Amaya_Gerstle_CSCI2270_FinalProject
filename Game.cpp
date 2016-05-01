@@ -5,9 +5,10 @@
 #include <stdlib.h>
 using namespace std;
 
-Game::Game(int playernum, int money)
+Game::Game(int playernumb, int money)
 {
     //ctor
+    playernum=playernumb;
     cin.ignore();
     for (int p = 0; p<playernum; p++){
         string name;
@@ -36,44 +37,55 @@ Game::~Game()
     //dtor
 }
 
-void Game::dealRound(int playernum, Decks *deck){
-    for (int h = 0; h<playernum; h++){
+void Game::dealRound(Decks *deck){
+    for (int h = 0; h<playernum+1; h++){
         Card* temp = deck->dealCard();
         players[h]->first = temp;
     }
-    for (int h = 0; h<playernum; h++){
+    for (int h = 0; h<playernum+1; h++){
         Card* temp = deck->dealCard();
         players[h]->first->next = temp;
     }
 }
 
-void Game::placeBets(int playernum){
+void Game::placeBets(){
     cout<<endl;
     cout<<"***Minimum bet is $10***"<<endl;
     string bet;
     int betint;
     for (int j=0;j<playernum;j++){
+            //cout<<players[j]->name;
+
+           //cout<<"test";
         bool goodbet = false;
         while (goodbet == false){
-            cout<<players[j]->name<<", what would you like to bet?  ";
-            cin>>bet;
-            betint = atoi(bet.c_str());
-            while (betint < 10 || betint > players[j]->money ){
-                if (betint < 10){
-                    cout<<"The minimum bet is $10. Please enter your bet: ";
+            if(players[j]->money>=10){
+                cout<<players[j]->name<<", what would you like to bet?  ";
+                cin>>bet;
+                betint = atoi(bet.c_str());
+                while (betint < 10 || betint > players[j]->money ){
+                    if (betint < 10){
+                        cout<<"The minimum bet is $10. Please enter your bet: ";
+                    }
+                    else if (betint > players[j]->money){
+                        cout<<"You don't have that much money! You only have $"<<players[j]->money<<". Please enter your bet: ";
+                    }
+                        cin>>bet;
+                        betint = atoi(bet.c_str());
                 }
-                else if (betint > players[j]->money){
-                    cout<<"You don't have that much money! You only have $"<<players[j]->money<<". Please enter your bet: ";
+                if (betint >=10 && betint <=players[j]->money){
+                    players[j]->bet = betint;
+                    goodbet = true;
                 }
-                    cin>>bet;
-                    betint = atoi(bet.c_str());
             }
-            if (betint >=10 && betint <=players[j]->money){
-                players[j]->bet = betint;
-                goodbet = true;
+            else{
+                cout<<"Sorry "<<players[j]->name<<", you do not have enough money to continue, and have been eliminated"<<endl;
+                players.erase(players.begin()+j);
+                playernum-=1;
+                j--;
+                goodbet=true;
             }
         }
-
     }
 }
 
@@ -249,7 +261,7 @@ void Game::determineWins(Player* player, Player* dealer, Decks *deck){
 }
 
 
-void Game::playRound(int playernum, Decks *deck){
+void Game::playRound(Decks *deck){
     Player *dealer = players[playernum];
     int choice;
     bool exit = false;
@@ -261,9 +273,9 @@ void Game::playRound(int playernum, Decks *deck){
             players[d]->hasAce = false;
             players[d]->bust = false;
         }
-        placeBets(playernum);
+        placeBets();
         cout<<endl;
-        dealRound(playernum+1, deck);
+        dealRound(deck);
         showDealerHand(deck);
         cout<<endl;
         for (int p = 0; p<playernum; p++){
@@ -299,5 +311,3 @@ void Game::playRound(int playernum, Decks *deck){
         }
     }
 }
-
-

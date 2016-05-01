@@ -18,11 +18,11 @@ class Game
     public:
         Game(int players, int money);
         ~Game();
-        void dealRound(int players, Decks *deck);
+        void dealRound(Decks *deck);
         void hit(Player*, Decks *deck);
         void hitDealer(Player*, Decks *deck);
-        void placeBets(int playernum);
-        void playRound(int playernum, Decks *deck);
+        void placeBets();
+        void playRound(Decks *deck);
         void showPlayerHand(Player* player, Decks *deck);
         void showDealerHand(Decks *deck);
         void revealDealerHand(Player* dealer, Decks *deck);
@@ -31,6 +31,7 @@ class Game
     protected:
     private:
         vector<Player*> players;
+        int playernum;
 };
 
 #endif // GAME_H
