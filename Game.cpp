@@ -10,6 +10,7 @@ Game::Game(int playernumb, int money)
     //ctor
     playernum=playernumb;
     cin.ignore();
+
     for (int p = 0; p<playernum; p++){
         string name;
         cout<<"Enter Player "<<p+1<<" name: ";
@@ -59,7 +60,9 @@ void Game::placeBets(){
            //cout<<"test";
         bool goodbet = false;
         while (goodbet == false){
-            if(players[j]->money>=10){
+            if(players[j]->money>=10){  if (players[j]->money == 420) {
+                cout << "Dank bro" << endl;
+            }
                 cout<<players[j]->name<<", what would you like to bet?  ";
                 cin>>bet;
                 betint = atoi(bet.c_str());
